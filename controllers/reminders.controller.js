@@ -43,9 +43,15 @@ exports.findAll = (req, res) => {
         message:
           err.message || "Some error occurred while retrieving Reminders.",
       });
-    else res.status(200).send(data);
+    if (req.query.after) {
+      const filtered = data.filter(
+        (cur) => new Date(cur.date) > new Date(Number(req.query.after))
+      );
 
-    // else res.status(201).json({data});
+      return res.status(200).send(filtered);
+    }
+
+    res.status(200).send(data);
   });
 };
 
